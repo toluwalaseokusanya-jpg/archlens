@@ -1,0 +1,320 @@
+:root {
+    --primary: #0066ff;
+    --primary-glow: rgba(0, 102, 255, 0.4);
+    --bg-dark: rgba(15, 17, 23, 0.85);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --text-main: #ffffff;
+    --text-muted: #94a3b8;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body, html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: #000;
+    color: var(--text-main);
+}
+
+#ar-view-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#ar-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Header & Status Indicator */
+.app-header {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    right: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.app-header h1 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.badge {
+    background: var(--primary);
+    font-size: 0.65rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    vertical-align: middle;
+}
+
+.status-pill {
+    background: var(--bg-dark);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-pill.offline i { color: #f59e0b; }
+.status-pill.online i { color: #10b981; }
+
+/* HUD Display for Measurements */
+.hud-panel {
+    position: absolute;
+    top: 80px;
+    left: 20px;
+    right: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.hud-panel.hidden { display: none; }
+
+.hud-item {
+    background: var(--bg-dark);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.hud-item .label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.hud-item .value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #38bdf8;
+}
+
+/* Onboarding Screen Overlay */
+.overlay-screen {
+    position: absolute;
+    inset: 0;
+    background: rgba(5, 7, 11, 0.9);
+    backdrop-filter: blur(15px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    transition: opacity 0.3s ease;
+}
+
+.overlay-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.card {
+    background: #111827;
+    border: 1px solid var(--border-color);
+    padding: 32px 24px;
+    border-radius: 24px;
+    text-align: center;
+    max-width: 380px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+}
+
+.scan-icon {
+    font-size: 3rem;
+    color: var(--primary);
+    margin-bottom: 16px;
+    animation: float 3s ease-in-out infinite;
+}
+
+.card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 12px;
+}
+
+.card p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 100%;
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px var(--primary-glow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Bottom Control Toolbar */
+.toolbar {
+    position: absolute;
+    bottom: 30px;
+    left: 20px;
+    right: 20px;
+    background: var(--bg-dark);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-around;
+    padding: 12px;
+    z-index: 10;
+}
+
+.tool-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.tool-btn i {
+    font-size: 1.2rem;
+}
+
+.tool-btn:hover, .tool-btn.active {
+    color: var(--primary);
+}
+
+/* Blueprint Export Modal */
+.modal {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 200;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+}
+
+.modal.hidden { display: none; }
+
+.modal-content {
+    background: #0f172a;
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 450px;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h3 { font-size: 1rem; }
+
+.icon-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.blueprint-viewport {
+    width: 100%;
+    height: 220px;
+    background: #020617;
+    position: relative;
+}
+
+#blueprint-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.export-actions {
+    padding: 20px;
+}
+
+.export-instruction {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.button-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-export {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-export i { color: var(--primary); }
+
+.btn-export:hover {
+    background: rgba(0, 102, 255, 0.15);
+    border-color: var(--primary);
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}

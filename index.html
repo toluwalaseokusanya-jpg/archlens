@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ArchScan Pro - AI Room & Spatial Scanner</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Three.js for 3D rendering and WebXR support -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Main Camera / WebXR Viewport Container -->
+    <div id="ar-view-container">
+        <canvas id="ar-canvas"></canvas>
+    </div>
+
+    <!-- UI Overlay Header -->
+    <header class="app-header">
+        <h1>ArchScan <span class="badge">PRO</span></h1>
+        <div id="device-status" class="status-pill offline">
+            <i class="fa-solid fa-circle"></i> Searching for Surface...
+        </div>
+    </header>
+
+    <!-- Real-time HUD (Heads Up Display) Measurements -->
+    <div id="hud-display" class="hud-panel hidden">
+        <div class="hud-item">
+            <span class="label">Est. Width</span>
+            <span id="val-width" class="value">0.00 m</span>
+        </div>
+        <div class="hud-item">
+            <span class="label">Est. Length</span>
+            <span id="val-length" class="value">0.00 m</span>
+        </div>
+        <div class="hud-item">
+            <span class="label">Area</span>
+            <span id="val-area" class="value">0.00 m²</span>
+        </div>
+    </div>
+
+    <!-- Onboarding / Instructions Screen -->
+    <div id="onboarding-screen" class="overlay-screen">
+        <div class="card">
+            <i class="fa-solid fa-cube scan-icon"></i>
+            <h2>Architectural Space Scanner</h2>
+            <p>Scan your room using your mobile camera. Pan slowly across floors and walls to construct a layout and capture exact measurements.</p>
+            <button id="start-scan-btn" class="btn-primary">
+                <i class="fa-solid fa-camera"></i> Start Room Scan
+            </button>
+        </div>
+    </div>
+
+    <!-- Floor Plan Preview Modal -->
+    <div id="blueprint-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generated 3D Floor Plan & Layout</h3>
+                <button id="close-modal" class="icon-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="blueprint-viewport">
+                <canvas id="blueprint-canvas"></canvas>
+            </div>
+            <div class="export-actions">
+                <p class="export-instruction">Select format compatible with your CAD software:</p>
+                <div class="button-grid">
+                    <button class="btn-export" data-format="skp"><i class="fa-solid fa-file-arrow-down"></i> SketchUp (.skp)</button>
+                    <button class="btn-export" data-format="rvt"><i class="fa-solid fa-file-arrow-down"></i> Revit (.rvt)</button>
+                    <button class="btn-export" data-format="ifc"><i class="fa-solid fa-file-arrow-down"></i> IFC BIM (.ifc)</button>
+                    <button class="btn-export" data-format="dxf"><i class="fa-solid fa-file-arrow-down"></i> AutoCAD DXF (.dxf)</button>
+                    <button class="btn-export" data-format="obj"><i class="fa-solid fa-file-arrow-down"></i> Wavefront (.obj)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Control Toolbar -->
+    <nav class="toolbar">
+        <button id="action-point" class="tool-btn" title="Mark Point">
+            <i class="fa-solid fa-crosshairs"></i>
+            <span>Pin Point</span>
+        </button>
+        <button id="action-generate" class="tool-btn active-pulse" title="Generate Layout">
+            <i class="fa-solid fa-compass-drafting"></i>
+            <span>Generate 3D Plan</span>
+        </button>
+        <button id="action-reset" class="tool-btn" title="Reset Scan">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>Reset</span>
+        </button>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>
